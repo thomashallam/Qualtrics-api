@@ -2,18 +2,20 @@
 
 * Install python3 latest, update Pip
 
-* pip -m venv .venv
+* python -m venv .venv
+
+* pip install -r requirements.txt
 
 * mkdir exports
 
 * cp .sample.env .env
 
-* nano .env
+* Edit .env
   - update: baseUrl, apiKey and surveyId
 
 * cp .sample.surveyIDs.csv .surveyIDs.csv
 
-* nano .surveyIDs.csv
+* Edit .surveyIDs.csv
    - populate list of surveyIDs
 
-* python connect.py
+* python launch.py
