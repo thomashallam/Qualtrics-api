@@ -69,7 +69,7 @@ def loop_check_completion(surveyId, exportProgressId):
         
         print(f'{percentComplete}%')
         
-        time.sleep(0.5)
+        time.sleep(3)
         
     fileId = parsed_data2['result']['fileId']
     
