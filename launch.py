@@ -28,7 +28,7 @@ def connect_and_export(surveyId):
     res = conn.getresponse()
     data = res.read()
 
-    print(data.decode("utf-8"))
+    # print(data.decode("utf-8"))
     
     extract_progress_id(surveyId, data)
 
@@ -96,7 +96,7 @@ def get_survey_name(surveyId, fileId):
     
     Questions =  parsed_data3['result']['Questions']
 
-    print(Questions)
+    # print(Questions)
 
     SurveyName = parsed_data3['result']['SurveyName']
     CleanedSurveyName = re.sub(r'[^\w\s]', '_', SurveyName)
