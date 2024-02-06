@@ -1,6 +1,8 @@
 # Qualtrics api export list of surveys to csv file type
 
-* Install python3 latest, update Pip
+* Install python3 latest
+  
+* python -m install --upgrade pip 
 
 * python -m venv .venv
 
