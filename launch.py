@@ -89,19 +89,26 @@ def get_survey_name(surveyId, fileId):
 
     res = conn.getresponse()
     data = res.read()
-    # print(data.decode("utf-8"))
+    
+#    print(data.decode("utf-8"))
     
     parsed_data3 = json.loads(data)
     
+    Questions =  parsed_data3['result']['Questions']
+
+    print(Questions)
+
     SurveyName = parsed_data3['result']['SurveyName']
     CleanedSurveyName = re.sub(r'[^\w\s]', '_', SurveyName)
     CleanedSurveyName = CleanedSurveyName.replace(' ', '_')
     print(f'Clean Survey name: {CleanedSurveyName}')
         
-    export_the_file(surveyId, fileId, CleanedSurveyName)
+    export_the_file(surveyId, fileId, CleanedSurveyName, Questions)
+
+    
 
 
-def export_the_file(surveyId, fileId, CleanedSurveyName):
+def export_the_file(surveyId, fileId, CleanedSurveyName, Questions):
     
     conn = http.client.HTTPSConnection(os.getenv("baseUrl"))
 
@@ -115,20 +122,49 @@ def export_the_file(surveyId, fileId, CleanedSurveyName):
     res = conn.getresponse()
     data = res.read()
     # print(data)
+
     utf8_encoded_data = data.decode("utf-8")
         
-    # Specify the CSV file path
-    csv_file_path = f"./exports/{surveyId}_{CleanedSurveyName}.csv"
+    # Specify the file path for survey data
+    data_file_path = f"./exports/{surveyId}_{CleanedSurveyName}.csv"
 
-    # Write data to CSV file
-    with open(csv_file_path, mode='w', newline='', encoding='utf-8') as file:
+    # Write survey data to CSV file
+    with open(data_file_path, mode='w', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
         rows = list(csv.reader(utf8_encoded_data.splitlines()))
         writer.writerows(rows)
 
-    print(f'Data has been exported to {csv_file_path}')
+    print(f'Survey data has been exported to {data_file_path}')
     
     time.sleep(1)
+
+    get_questions(surveyId, CleanedSurveyName)
+
+
+def get_questions(surveyId, CleanedSurveyName):
+
+    conn = http.client.HTTPSConnection(os.getenv("baseUrl"))
+
+    headers = {
+    'Accept': "application/json",
+    'X-API-TOKEN': os.getenv("apiKey")
+    }
+
+    conn.request("GET", f'/API/v3/survey-definitions/{surveyId}/questions', headers=headers)
+
+    res = conn.getresponse()
+    data = res.read()
+
+    decode = data.decode("utf-8")
+
+    # Specify the file path for survey questions
+    data_file_path2 = f"./exports/{surveyId}_{CleanedSurveyName}_Questions.json"
+
+    # Write survey questions to a json file
+    with open(data_file_path2, 'w') as f:
+        json.dump(decode, f)
+
+    print(f'Survey questions exported to {data_file_path2}')
 
 
 def loop_surveys():
